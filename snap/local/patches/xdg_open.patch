@@ -1,0 +1,13 @@
+diff --git a/src/View/WelcomeView.vala b/src/View/WelcomeView.vala
+index d6af290..be2586d 100644
+--- a/src/View/WelcomeView.vala
++++ b/src/View/WelcomeView.vala
+@@ -17,7 +17,7 @@ public class WelcomeView : AbstractView {
+                     try{
+                         var path = TransporterSettings.get_default ().get_downloads_folder ();
+                         Process.spawn_command_line_sync ("mkdir " + path);
+-                        AppInfo.launch_default_for_uri ("file://" + path, null);
++                        Process.spawn_command_line_sync ("xdg-open " + path);
+                     }
+                     catch(GLib.Error e){
+                         warning(e.message);

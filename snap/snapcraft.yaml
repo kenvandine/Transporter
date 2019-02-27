@@ -75,6 +75,7 @@ parts:
       sed -i.bak -e 's|magic-wormhole|wormhole|g' src/WormholeInterface.vala
       sed -i.bak -e 's|WORMHOLE_LOCATIONS = {|WORMHOLE_LOCATIONS = {"/snap/transporter/current/bin/wormhole", |g' src/WormholeInterface.vala
       sed -i.bak -e 's|Icon=com.github.bleakgrey.transporter$|Icon=${SNAP}/meta/gui/transporter.svg|g' data/com.github.bleakgrey.transporter.desktop.in
+      patch -p1 < $SNAPCRAFT_PART_INSTALL/../src/snap/local/patches/xdg_open.patch
     override-build: |
       snapcraftctl build
       mkdir -p $SNAPCRAFT_PART_INSTALL/meta/gui/
@@ -94,4 +95,3 @@ parts:
       - gettext
     stage-packages:
       - libgranite4
-      - zip
