@@ -1,0 +1,97 @@
+name: transporter
+version: git
+summary: Hassle-free file sharing
+description: |
+  Share your files between computers, fast and safe.
+
+  Your devices are identified by using identical "wormhole codes": in general, the sending machine generates and displays the code, which must then be typed into the receiving machine. The "wormhole codes" are easily memorized and pronounced, perfectly suitable for realization in speech.
+
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict
+base: core18
+
+plugs:
+  gnome-3-28-1804:
+    interface: content
+    target: $SNAP/gnome-platform
+    default-provider: gnome-3-28-1804
+  gtk-3-themes:
+    interface: content
+    target: $SNAP/data-dir/themes
+    default-provider: gtk-common-themes
+  icon-themes:
+    interface: content
+    target: $SNAP/data-dir/icons
+    default-provider: gtk-common-themes
+  sound-themes:
+    interface: content
+    target: $SNAP/data-dir/sounds
+    default-provider: gtk-common-themes
+
+slots:
+  # for GtkApplication registration
+  transporter:
+    interface: dbus
+    bus: session
+    name: com.github.bleakgrey.transporter
+
+apps:
+  transporter:
+    command: bin/desktop-launch ${SNAP}/usr/bin/com.github.bleakgrey.transporter
+    desktop: usr/share/applications/com.github.bleakgrey.transporter.desktop
+    plugs:
+      - desktop
+      - desktop-legacy
+      - home
+      - gsettings
+      - network
+      - wayland
+      - x11
+      - unity7
+
+parts:
+  desktop-gnome-platform:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: gtk
+    plugin: make
+    make-parameters: ["FLAVOR=gtk3"]
+    build-packages:
+      - build-essential
+      - libgtk-3-dev
+    override-build: |
+      snapcraftctl build
+      mkdir -pv $SNAPCRAFT_PART_INSTALL/gnome-platform
+
+  wormhole:
+    plugin: python
+    python-packages: [ magic-wormhole ]
+
+  transporter:
+    after: [desktop-gnome-platform, wormhole]
+    source: .
+    source-type: git
+    override-pull: |
+      snapcraftctl pull
+      sed -i.bak -e 's|magic-wormhole|wormhole|g' src/WormholeInterface.vala
+      sed -i.bak -e 's|WORMHOLE_LOCATIONS = {|WORMHOLE_LOCATIONS = {"/snap/transporter/current/bin/wormhole", |g' src/WormholeInterface.vala
+      sed -i.bak -e 's|Icon=com.github.bleakgrey.transporter$|Icon=${SNAP}/meta/gui/transporter.svg|g' data/com.github.bleakgrey.transporter.desktop.in
+    override-build: |
+      snapcraftctl build
+      mkdir -p $SNAPCRAFT_PART_INSTALL/meta/gui/
+      cp data/icons/128/com.github.bleakgrey.transporter.svg $SNAPCRAFT_PART_INSTALL/meta/gui/transporter.svg
+    plugin: meson
+    meson-parameters:
+      - --prefix=/snap/transporter/current/usr
+    organize:
+      snap/transporter/current/usr: usr
+    build-packages:
+      - valac
+      - libgranite-dev
+      - libgtk-3-dev
+      - libglib2.0-dev
+      - libsoup2.4-dev
+      - libjson-glib-dev
+      - gettext
+    stage-packages:
+      - libgranite4
+      - zip
