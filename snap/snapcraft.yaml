@@ -9,6 +9,8 @@ description: |
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict
 base: core18
+architectures:
+  - build-on: [ amd64, i386 ]
 
 plugs:
   gnome-3-28-1804:
