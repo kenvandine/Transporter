@@ -1,11 +1,6 @@
 name: transporter
 version: git
-summary: Hassle-free file sharing
-description: |
-  Share your files between computers, fast and safe.
-
-  Your devices are identified by using identical "wormhole codes": in general, the sending machine generates and displays the code, which must then be typed into the receiving machine. The "wormhole codes" are easily memorized and pronounced, perfectly suitable for realization in speech.
-
+adopt-info: transporter
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict
 base: core18
@@ -43,7 +38,7 @@ slots:
 apps:
   transporter:
     command: bin/desktop-launch ${SNAP}/usr/bin/com.github.bleakgrey.transporter
-    desktop: usr/share/applications/com.github.bleakgrey.transporter.desktop
+    common-id: com.github.bleakgrey.transporter.desktop
     plugs:
       - desktop
       - desktop-legacy
@@ -72,6 +67,9 @@ parts:
     source: https://github.com/elementary/granite.git
     meson-parameters: [ --prefix=/usr ]
     plugin: meson
+    override-pull: |
+      snapcraftctl pull
+      sed -i.bak -e 's|io.elementary.desktop.wingpanel.datetime|org.gnome.desktop.interface|g' lib/DateTime.vala
     build-packages:
       - libgee-0.8-dev
       - libgtk-3-dev
@@ -89,6 +87,7 @@ parts:
     after: [granite, desktop-gnome-platform, wormhole]
     source: .
     source-type: git
+    parse-info: [usr/share/metainfo/com.github.bleakgrey.transporter.appdata.xml]
     build-environment:
       - XDG_DATA_DIRS: $XDG_DATA_DIRS:$SNAPCRAFT_STAGE/usr/share:/usr/share
       - GI_TYPELIB_PATH: $SNAPCRAFT_STAGE/usr/lib/girepository-1.0:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0:/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0
