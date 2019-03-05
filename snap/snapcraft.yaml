@@ -48,6 +48,7 @@ apps:
       - wayland
       - x11
       - unity7
+      - removable-media
 
 parts:
   desktop-gnome-platform:
