@@ -7,7 +7,7 @@ public abstract class AbstractView : Gtk.Grid {
     protected TransporterWindow window;
     protected WormholeInterface wormhole;
 
-    public AbstractView (TransporterWindow window) {
+    protected AbstractView (TransporterWindow window) {
         this.window = window;
         this.wormhole = window.wormhole;
         this.setup ();
