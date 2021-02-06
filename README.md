@@ -1,10 +1,8 @@
-# Transporter
-
-[![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/com.github.bleakgrey.transporter)
+# Transporter (fork)
 
 Simple [magic-wormhole](https://github.com/warner/magic-wormhole) client designed for elementary OS.
 
-![Transporter Screenshot](https://raw.githubusercontent.com/cassidyjames/transporter/master/data/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/cassidyjames/transporter/master/data/screenshot.png)
 
 ## Building and Installation
 
