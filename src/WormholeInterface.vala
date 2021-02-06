@@ -60,7 +60,7 @@ public class WormholeInterface : Object {
     public bool install() {
         started ();
         try {
-            Process.spawn_command_line_sync ("pip install --user --no-input magic-wormhole");
+            Process.spawn_command_line_sync ("pip3 install --user --no-input magic-wormhole");
         }
         catch (GLib.SpawnError e) {
             warning (e.message);
