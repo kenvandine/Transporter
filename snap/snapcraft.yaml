@@ -3,12 +3,10 @@ version: git
 adopt-info: transporter
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict
-base: core20
+base: core18
 architectures:
   - build-on: amd64
     run-on: amd64
-  - build-on: i386
-    run-on: i386
 
 slots:
   # for GtkApplication registration
@@ -19,7 +17,7 @@ slots:
 
 apps:
   transporter:
-    extensions: [ gnome-3-38 ]
+    extensions: [ gnome-3-34 ]
     command: usr/bin/com.github.bleakgrey.transporter
     common-id: com.github.bleakgrey.transporter.desktop
     plugs:
@@ -30,6 +28,7 @@ apps:
 parts:
   granite:
     source: https://github.com/elementary/granite.git
+    source-tag: 5.3.0
     meson-parameters: [ --prefix=/usr ]
     plugin: meson
     override-pull: |
@@ -45,7 +44,6 @@ parts:
   transporter:
     after: [granite, wormhole]
     source: .
-    source-type: git
     parse-info: [usr/share/metainfo/com.github.bleakgrey.transporter.appdata.xml]
     build-environment:
       - XDG_DATA_DIRS: $XDG_DATA_DIRS:$SNAPCRAFT_STAGE/usr/share:/usr/share
@@ -59,7 +57,7 @@ parts:
     override-build: |
       snapcraftctl build
       mkdir -p $SNAPCRAFT_PART_INSTALL/meta/gui/
-      cp data/icons/128/com.github.bleakgrey.transporter.svg $SNAPCRAFT_PART_INSTALL/meta/gui/transporter.svg
+      cp $SNAPCRAFT_PART_SRC/data/icons/128/com.github.bleakgrey.transporter.svg $SNAPCRAFT_PART_INSTALL/meta/gui/transporter.svg
     plugin: meson
     meson-parameters:
       - --prefix=/snap/transporter/current/usr
